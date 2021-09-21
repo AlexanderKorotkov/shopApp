@@ -1,10 +1,61 @@
 import PRODUCTS from "../../data/dummy-data";
+import Product from "../../models/product";
+import {DELETE_PRODUCT, CREATE_PRODUCT, UPDATE_PRODUCT} from "../actions/products";
 
 const initialState = {
   availableProducts: PRODUCTS,
-  userProducts: PRODUCTS.filter(prod => prod.id === 'u1')
+  userProducts: PRODUCTS.filter(prod => prod.ownerId === 'u1')
 };
 
 export default (state = initialState, action) => {
-  return state;
+  switch (action.type) {
+    case DELETE_PRODUCT:
+      return {
+        ...state,
+        userProducts: state.userProducts.filter((product) =>
+          product.id !== action.pid
+        ),
+        availableProducts: state.userProducts.filter((product) =>
+          product.id !== action.pid
+        ),
+      };
+    case CREATE_PRODUCT:
+      const newProduct = new Product(
+        new Date().toString(),
+        'u1',
+        action.productData.title,
+        action.productData.description,
+        action.productData.imageUrl,
+        action.productData.price,
+      );
+      return {
+        ...state,
+        availableProducts: state.availableProducts.concat(newProduct) ,
+        userProducts: state.userProducts.concat(newProduct)
+      };
+    case UPDATE_PRODUCT:
+      const productIndex = state.userProducts.findIndex((prod) => prod.id === action.pid)
+      const updatedProduct = new Product(
+        action.pid,
+        state.userProducts[productIndex].ownerId,
+        action.productData.title,
+        action.productData.imageUrl,
+        action.productData.description,
+        state.userProducts[productIndex].price,
+      );
+      const  updatedUserProducts = [...state.userProducts];
+      updatedUserProducts[productIndex] = updatedProduct;
+
+      const  updatedAvailableProducts = [...state.userProducts];
+      const availableProductIndex = state.availableProducts.findIndex((prod) => prod.id === action.pid);
+      updatedAvailableProducts[availableProductIndex] = updatedProduct;
+      return {
+        ...state,
+        availableProducts: updatedAvailableProducts,
+        userProducts: updatedUserProducts
+      };
+    default:
+      return state;
+  }
+
 }

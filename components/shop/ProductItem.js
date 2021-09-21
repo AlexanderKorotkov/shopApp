@@ -1,6 +1,7 @@
 import React from 'react';
 import {StyleSheet, View, Text, Image, Button, TouchableOpacity, TouchableNativeFeedback, Platform} from 'react-native';
 import Colors from "../../constants/Colors";
+import Card from "../UI/Card";
 
 const ProductItem = (props) => {
 
@@ -11,37 +12,29 @@ const ProductItem = (props) => {
   }
 
   return (
-    <View style={styles.product}>
+    <Card style={styles.product}>
       <View style={styles.touchable}>
-        <TouchableComponent onPress={props.onViewDetail} useForeground>
+        <TouchableComponent onPress={props.onSelect} useForeground>
           <View>
             <View style={styles.imageContainer}>
               <Image style={styles.image} source={{uri: props.image}} />
             </View>
             <View style={styles.details}>
               <Text style={styles.title}>{props.title}</Text>
-              <Text style={styles.price}>{props.price.toFixed(2)}</Text>
+              <Text style={styles.price}>{props.price?.toFixed(2)}</Text>
             </View>
             <View style={styles.actions}>
-              <Button color={Colors.primary} title='View Details' onPress={props.onViewDetail} />
-              <Button color={Colors.primary} title='To Cart' onPress={props.onAddCart}/>
+              {props.children}
             </View>
           </View>
         </TouchableComponent>
       </View>
-    </View>
+    </Card>
   );
 };
 
 const styles = StyleSheet.create({
   product: {
-    shadowColor: 'black',
-    shadowOpacity: 0.26,
-    shadowOffset: {width: 0, height: 2},
-    shadowRadius: 8,
-    elevation: 5,
-    borderRadius: 10,
-    backgroundColor: 'white',
     height: 300,
     margin: 20,
   },
@@ -62,7 +55,7 @@ const styles = StyleSheet.create({
   },
   details: {
     alignItems: 'center',
-    height: '15%',
+    height: '17%',
     padding: 10
   },
   title: {
@@ -79,7 +72,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    height: '25%',
+    height: '23%',
     paddingHorizontal: 20
   },
 });
