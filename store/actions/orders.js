@@ -1,14 +1,14 @@
 import Order from "../../models/order";
-import Product from "../../models/product";
 
 export const ADD_ORDER = 'ADD_ORDER';
 export const SET_ORDERS = 'SET_ORDERS';
 
 export const fetchOrders = () => {
-  return async (dispatch) =>  {
+  return async (dispatch,getState) =>  {
     try{
+      const userId = getState().auth.userId;
       const res = await fetch(
-        'https://shopapp-3960d-default-rtdb.europe-west1.firebasedatabase.app/orders/u1.json'
+        `https://shopapp-3960d-default-rtdb.europe-west1.firebasedatabase.app/orders/${userId}.json`
       );
 
       if (!res.ok) {
@@ -40,11 +40,13 @@ export const fetchOrders = () => {
 };
 
 export const addOrder = (cartItems, totalAmount) => {
-  return async (dispatch) =>  {
+  return async (dispatch, getState) =>  {
     try{
       const date = new Date();
+      const token = getState().auth.token;
+      const userId = getState().auth.userId;
       const res = await fetch(
-        'https://shopapp-3960d-default-rtdb.europe-west1.firebasedatabase.app/orders/u1.json',
+        `https://shopapp-3960d-default-rtdb.europe-west1.firebasedatabase.app/orders/${userId}.json?auth=${token}`,
         {
           method: 'POST',
           headers: {

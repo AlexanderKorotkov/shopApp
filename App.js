@@ -3,9 +3,11 @@ import { StyleSheet} from 'react-native';
 import {Provider} from "react-redux";
 import {createStore, combineReducers, applyMiddleware} from "redux";
 import {composeWithDevTools} from "redux-devtools-extension";
+import NavigationContainer from "./navigation/NavigationContainer";
 import ordersReducer from './store/reducers/orders'
 import productReducer from './store/reducers/products'
 import cartReducer from './store/reducers/cart'
+import authReducer from './store/reducers/auth'
 import ShopNavigator from './navigation/ShopNavigator'
 import * as Font from 'expo-font'
 import  AppLoading  from 'expo-app-loading'
@@ -15,6 +17,7 @@ const rootReducer = combineReducers({
   products: productReducer,
   cart: cartReducer,
   orders: ordersReducer,
+  auth: authReducer,
 });
 
 const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
@@ -40,7 +43,7 @@ export default function App() {
 
   return (
     <Provider store={store}>
-      <ShopNavigator />
+      <NavigationContainer />
     </Provider>
 
   );
